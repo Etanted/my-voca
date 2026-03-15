@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VOCA - 영어완전정복 스마트 단어장</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ===== 헤더 ===== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo-area">
+        <span class="logo-icon">📚</span>
+        <div class="logo-text">
+          <h1>VOCA</h1>
+          <span class="logo-sub">영어완전정복 스마트 단어장</span>
+        </div>
+      </div>
+
+      <div class="search-area">
+        <div class="search-box">
+          <input type="text" id="searchInput" class="search-input" placeholder="단어 검색..." autocomplete="off" />
+          <button class="search-btn" id="searchBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="header-stats">
+        <div class="stat-item">
+          <span class="stat-num" id="totalChecked">0</span>
+          <span class="stat-label">학습 완료</span>
+        </div>
+        <div class="stat-divider">/</div>
+        <div class="stat-item">
+          <span class="stat-num">6,000</span>
+          <span class="stat-label">전체 단어</span>
+        </div>
+      </div>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="메뉴 열기">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <!-- 진행률 바 -->
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progressBar" style="width:0%"></div>
+    </div>
+  </header>
+
+  <!-- ===== 메인 레이아웃 ===== -->
+  <div class="app-container">
+
+    <!-- 사이드바 -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2>학습 일정</h2>
+        <span class="day-count">300일 완성</span>
+      </div>
+
+      <div class="sidebar-filter">
+        <button class="filter-btn active" data-filter="all">전체</button>
+        <button class="filter-btn" data-filter="studied">학습함</button>
+        <button class="filter-btn" data-filter="unstudied">미학습</button>
+      </div>
+
+      <div class="day-list" id="dayList">
+        <!-- JS로 동적 생성 -->
+      </div>
+    </aside>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="main-content" id="mainContent">
+
+      <!-- ===== 탭 네비게이션 ===== -->
+      <div class="main-tabs" id="mainTabs">
+        <button class="main-tab active" data-tab="study">📖 단어 학습</button>
+        <button class="main-tab" data-tab="wordlist">📋 전체 단어 리스트</button>
+        <button class="main-tab" data-tab="progress">📊 학습 진도</button>
+      </div>
+
+      <!-- ===== 탭1: 단어 학습 ===== -->
+      <div id="tabStudy" class="tab-pane">
+
+      <!-- 일자 헤더 -->
+      <div class="day-header" id="dayHeader">
+        <div class="day-title-wrap">
+          <h2 class="day-title" id="dayTitle">Day 1</h2>
+          <span class="day-theme" id="dayTheme">핵심 동사 I</span>
+        </div>
+        <div class="day-actions">
+          <button class="btn-check-all" id="checkAllBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            전체 학습완료
+          </button>
+          <div class="day-nav">
+            <button class="nav-btn" id="prevDayBtn" title="이전 날">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            <button class="nav-btn" id="nextDayBtn" title="다음 날">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 일자 진행률 -->
+      <div class="day-progress" id="dayProgress">
+        <span class="day-progress-text" id="dayProgressText">0 / 20 학습</span>
+        <div class="day-progress-bar-wrap">
+          <div class="day-progress-bar" id="dayProgressBar" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- 검색 결과 안내 -->
+      <div class="search-result-info" id="searchResultInfo" style="display:none">
+        <span id="searchResultText"></span>
+        <button class="search-clear-btn" id="searchClearBtn">✕ 검색 취소</button>
+      </div>
+
+      <!-- 단어 카드 그리드 -->
+      <div class="word-grid" id="wordGrid">
+        <!-- JS로 동적 생성 -->
+      </div>
+
+      <!-- 빈 상태 -->
+      <div class="empty-state" id="emptyState" style="display:none">
+        <div class="empty-icon">🔍</div>
+        <p>검색 결과가 없습니다.</p>
+      </div>
+
+      </div><!-- /tabStudy -->
+
+      <!-- ===== 탭2: 전체 단어 리스트 ===== -->
+      <div id="tabWordlist" class="tab-pane" style="display:none">
+        <div id="wordListContainer"></div>
+      </div>
+
+      <!-- ===== 탭3: 학습 진도 ===== -->
+      <div id="tabProgress" class="tab-pane" style="display:none">
+        <div id="progressContainer"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ===== 단어 상세 모달 ===== -->
+  <div class="modal-overlay" id="wordModal" role="dialog" aria-modal="true" style="display:none">
+    <div class="modal-box">
+      <button class="modal-close" id="modalClose" aria-label="닫기">✕</button>
+      <div class="modal-body" id="modalBody">
+        <!-- JS로 동적 생성 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 사이드바 오버레이 (모바일) ===== -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ===== 스크립트 ===== -->
+  <script src="js/data.js"></script>
+  <script src="js/examples2.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
