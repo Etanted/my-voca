@@ -749,6 +749,134 @@ ul, ol { list-style: none; }
 }
 
 /* =========================================================
+   보텀 네비게이션 (모바일 전용 — 기본 숨김)
+   ========================================================= */
+:root { --bottom-nav-h: 58px; }
+
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: #fff;
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, .07);
+  /* iPhone home indicator safe area */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.bottom-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: var(--bottom-nav-h);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color var(--transition);
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+.bottom-nav-item.active { color: var(--primary); }
+.bottom-nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 3px;
+  background: var(--primary);
+  border-radius: 0 0 4px 4px;
+}
+.bottom-nav-icon { font-size: 20px; line-height: 1; }
+.bottom-nav-label { font-size: 10px; font-weight: 600; }
+
+/* =========================================================
+   모바일 검색 버튼 (헤더 내, 480px 이하에서 표시)
+   ========================================================= */
+.mobile-search-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: background var(--transition);
+  -webkit-tap-highlight-color: transparent;
+}
+.mobile-search-btn:hover { background: var(--bg); }
+
+/* =========================================================
+   모바일 검색 오버레이 (480px 이하에서 토글)
+   ========================================================= */
+.mobile-search-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: #fff;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-100%);
+  transition: transform .25s ease;
+}
+.mobile-search-overlay.open {
+  display: block;
+  transform: translateY(0);
+}
+
+.mobile-search-bar {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  padding: 0 8px 0 4px;
+  gap: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.mobile-search-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+.mobile-search-input {
+  flex: 1;
+  border: none;
+  font-size: 16px;
+  outline: none;
+  color: var(--text-primary);
+  font-family: inherit;
+  background: transparent;
+}
+.mobile-search-input::placeholder { color: var(--text-tertiary); }
+.mobile-search-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--text-tertiary);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* =========================================================
    반응형 레이아웃
    ========================================================= */
 @media (max-width: 1024px) {
@@ -769,6 +897,10 @@ ul, ol { list-style: none; }
   .search-input { font-size: 15px; } /* iOS 자동 줄이기 방지 */
   .menu-toggle { display: flex; }
 
+  /* 보텀 네비 표시 / 상단 탭 숨기기 */
+  .bottom-nav { display: flex; }
+  .main-tabs { display: none; }
+
   /* 사이드바 슬라이드 */
   .sidebar {
     position: fixed;
@@ -784,11 +916,11 @@ ul, ol { list-style: none; }
   .sidebar.open { transform: translateX(0); }
   .sidebar-overlay.show { display: block; }
 
-  .main-content { padding: 12px; }
-
-  /* 탭 */
-  .main-tabs { gap: 3px; padding-bottom: 12px; margin-bottom: 14px; }
-  .main-tab { font-size: 13px; padding: 7px 12px; }
+  /* 콘텐츠: 보텀 네비 높이 + safe area만큼 하단 여백 */
+  .main-content {
+    padding: 12px;
+    padding-bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px) + 16px);
+  }
 
   /* 일자 헤더 */
   .day-header { flex-direction: column; align-items: flex-start; gap: 8px; }
@@ -832,13 +964,14 @@ ul, ol { list-style: none; }
 @media (max-width: 480px) {
   :root { --header-h: 52px; }
 
-  /* 헤더 검색안 측 노출 (480px 미만) */
+  /* 헤더 검색창 숨김 → 검색 아이콘 버튼으로 대체 */
   .search-area { display: none; }
+  .mobile-search-btn { display: flex; }
 
   /* 로고 */
   .logo-text h1 { font-size: 16px; }
 
-  /* 탭 텔스트 중요 아이콘만 표시 */
+  /* 탭 텍스트 중요 아이콘만 표시 */
   .main-tab { font-size: 12px; padding: 6px 10px; }
 
   /* 카드 */
@@ -857,7 +990,7 @@ ul, ol { list-style: none; }
   .day-progress { flex-wrap: wrap; gap: 6px; }
   .day-progress-text { font-size: 11px; }
 
-  /* 얨어 탭 */
+  /* 버튼 */
   .btn-check-all { font-size: 12px; padding: 5px 10px; }
   .nav-btn { width: 32px; height: 32px; }
 
@@ -868,6 +1001,23 @@ ul, ol { list-style: none; }
   .wl-pron { display: none; }
   .wl-table th, .wl-table td { padding: 7px 8px; font-size: 12px; }
   .wl-word { font-size: 13px; }
+
+  /* 모달 → bottom sheet (slide-up) */
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .modal-box {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    max-height: 92vh;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    animation: slideUpModal .28s ease;
+  }
+}
+
+@keyframes slideUpModal {
+  from { transform: translateY(30%); opacity: 0; }
+  to   { transform: translateY(0);   opacity: 1; }
 }
 
 /* ── 종합 touch 최적화 ── */

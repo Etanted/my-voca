@@ -158,29 +158,54 @@ const App = (() => {
     /* 사이드바 오버레이 클릭 */
     document.getElementById('sidebarOverlay')?.addEventListener('click', UI.closeSidebar);
 
-    /* ── 탭 전환 ── */
+    /* ── 보텀 네비게이션 탭 ── */
+    document.getElementById('bottomNav')?.addEventListener('click', e => {
+      const btn = e.target.closest('.bottom-nav-item');
+      if (!btn) return;
+      const tab = btn.dataset.tab;
+      if (tab === currentTab) return;
+      doTabSwitch(tab);
+    });
+
+    /* ── 모바일 검색 토글 ── */
+    const mobileSearchBtn     = document.getElementById('mobileSearchBtn');
+    const mobileSearchOverlay = document.getElementById('mobileSearchOverlay');
+    const mobileSearchInput   = document.getElementById('mobileSearchInput');
+    const mobileSearchBack    = document.getElementById('mobileSearchBack');
+    const mobileSearchClear   = document.getElementById('mobileSearchClear');
+
+    mobileSearchBtn?.addEventListener('click', () => {
+      mobileSearchOverlay?.classList.add('open');
+      mobileSearchInput?.focus();
+    });
+    mobileSearchBack?.addEventListener('click', () => {
+      mobileSearchOverlay?.classList.remove('open');
+      if (mobileSearchInput) mobileSearchInput.value = '';
+    });
+    mobileSearchClear?.addEventListener('click', () => {
+      if (mobileSearchInput) mobileSearchInput.value = '';
+      mobileSearchInput?.focus();
+    });
+    mobileSearchInput?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const query = mobileSearchInput.value.trim();
+        mobileSearchOverlay?.classList.remove('open');
+        if (!query) { render(currentDay); return; }
+        switchToTab('study');
+        performSearch(query);
+      } else if (e.key === 'Escape') {
+        mobileSearchOverlay?.classList.remove('open');
+        if (mobileSearchInput) mobileSearchInput.value = '';
+      }
+    });
+
+    /* ── 상단 탭 전환 ── */
     document.getElementById('mainTabs')?.addEventListener('click', e => {
       const btn = e.target.closest('.main-tab');
       if (!btn) return;
       const tab = btn.dataset.tab;
       if (tab === currentTab) return;
-      currentTab = tab;
-
-      document.querySelectorAll('.main-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-      document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
-
-      if (tab === 'study') {
-        document.getElementById('tabStudy').style.display = '';
-      } else if (tab === 'wordlist') {
-        document.getElementById('tabWordlist').style.display = '';
-        wlFilterDay = 0;
-        UI.renderWordList(wlFilterDay);
-        bindWordListEvents();
-      } else if (tab === 'progress') {
-        document.getElementById('tabProgress').style.display = '';
-        UI.renderProgressPage();
-        bindProgressEvents();
-      }
+      doTabSwitch(tab);
     });
 
     /* ── 진도 탭에서 Day 히트맵/바 클릭 → 학습 탭 이동 ── */
@@ -245,10 +270,26 @@ const App = (() => {
   ───────────────────────────────────────── */
   function switchToTab(tab) {
     currentTab = tab;
+    // 상단 탭 (PC)
     document.querySelectorAll('.main-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    // 하단 탭 (모바일)
+    document.querySelectorAll('.bottom-nav-item').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
     document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
     const pane = document.getElementById(tab === 'study' ? 'tabStudy' : tab === 'wordlist' ? 'tabWordlist' : 'tabProgress');
     if (pane) pane.style.display = '';
+  }
+
+  // 탭 전환 + 콘텐츠 렌더링 (상/하단 탭 공통 호출)
+  function doTabSwitch(tab) {
+    switchToTab(tab);
+    if (tab === 'wordlist') {
+      wlFilterDay = 0;
+      UI.renderWordList(wlFilterDay);
+      bindWordListEvents();
+    } else if (tab === 'progress') {
+      UI.renderProgressPage();
+      bindProgressEvents();
+    }
   }
 
   /* ─────────────────────────────────────────
