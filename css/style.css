@@ -884,24 +884,35 @@ ul, ol { list-style: none; }
   .word-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
 }
 
-/* ── Tablet (768px) ── */
+/* ── Mobile / Tablet (768px) ── */
 @media (max-width: 768px) {
-  :root { --header-h: 56px; }
+  :root { --header-h: 54px; }
 
-  .header-inner { padding: 0 12px; gap: 12px; }
+  /* 헤더: 햄버거 왼쪽, 로고, 검색, 통계 간략 */
+  .header-inner { padding: 0 10px; gap: 8px; }
+  .menu-toggle { display: flex; order: -1; margin-left: 0; }
   .logo-icon { font-size: 22px; }
   .logo-text h1 { font-size: 17px; }
   .logo-sub { display: none; }
-  .header-stats { display: none; }
-  .search-area { max-width: none; }
-  .search-input { font-size: 15px; } /* iOS 자동 줄이기 방지 */
-  .menu-toggle { display: flex; }
 
-  /* 보텀 네비 표시 / 상단 탭 숨기기 */
-  .bottom-nav { display: flex; }
-  .main-tabs { display: none; }
+  /* 통계: 숫자만 간략표시 */
+  .header-stats { display: flex; gap: 2px; flex-shrink: 0; }
+  .stat-label { display: none; }
+  .stat-num { font-size: 13px; }
+  .stat-divider { font-size: 13px; }
 
-  /* 사이드바 슬라이드 */
+  /* 검색상자 콤팬트 */
+  .search-area { flex: 1; min-width: 0; max-width: none; }
+  .search-input { font-size: 15px; } /* iOS 자동 확대 방지 */
+  .search-box { padding: 0 4px 0 12px; }
+  .search-btn { width: 30px; height: 30px; }
+
+  /* 상단 탭 유지 (PC와 동일한 UX), 보텀 네비 숨김 */
+  .main-tabs { display: flex; gap: 3px; padding-bottom: 12px; margin-bottom: 14px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .main-tab { font-size: 13px; padding: 7px 12px; white-space: nowrap; }
+  .bottom-nav { display: none; }
+
+  /* 사이드바 드로어 */
   .sidebar {
     position: fixed;
     top: var(--header-h);
@@ -916,26 +927,24 @@ ul, ol { list-style: none; }
   .sidebar.open { transform: translateX(0); }
   .sidebar-overlay.show { display: block; }
 
-  /* 콘텐츠: 보텀 네비 높이 + safe area만큼 하단 여백 */
-  .main-content {
-    padding: 12px;
-    padding-bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px) + 16px);
-  }
+  /* 콘텐츠 패딩 (보텀 네비 없음) */
+  .main-content { padding: 12px; }
 
-  /* 일자 헤더 */
-  .day-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  /* 일자 헤더: 행 레이아웃 유지 (PC와 동일하게) */
+  .day-header { flex-direction: row; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .day-title-wrap { flex: 1; min-width: 0; align-items: center; }
   .day-title { font-size: 20px; }
-  .day-actions { width: 100%; justify-content: space-between; }
-  .btn-check-all { flex: 1; justify-content: center; }
+  .day-actions { display: flex; align-items: center; gap: 8px; }
+  .btn-check-all { font-size: 12px; padding: 5px 10px; }
 
-  /* 단어 카드 */
+  /* 단어 카드: 1열 */
   .word-grid { grid-template-columns: 1fr; gap: 12px; }
   .word-card { padding: 16px; }
   .card-word { font-size: 20px; }
   .card-meaning-item { font-size: 13px; }
   .card-example-en { font-size: 12px; }
 
-  /* 카드 액션 버튼 터치 커지게 */
+  /* 카드 버튼 터치 영역 확대 */
   .card-actions { gap: 6px; }
   .card-audio-btn,
   .card-detail-btn { padding: 7px 12px; font-size: 12px; }
@@ -951,8 +960,6 @@ ul, ol { list-style: none; }
   .pg-stats-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .pg-stat-num { font-size: 22px; }
   .pg-day-bar-row { padding: 5px 6px; }
-
-  /* 진도 탭 히트맵 */
   .pg-heatmap { grid-template-columns: repeat(20, 1fr); }
   .pg-day-theme { display: none; }
 
@@ -960,19 +967,34 @@ ul, ol { list-style: none; }
   .wl-table th, .wl-table td { padding: 8px 10px; }
 }
 
-/* ── Mobile (480px) ── */
+/* ── Mobile Small (480px) ── */
 @media (max-width: 480px) {
   :root { --header-h: 52px; }
 
-  /* 헤더 검색창 숨김 → 검색 아이콘 버튼으로 대체 */
+  /* 검색창 숨김 → 아이콘 버튼 */
   .search-area { display: none; }
   .mobile-search-btn { display: flex; }
 
-  /* 로고 */
-  .logo-text h1 { font-size: 16px; }
+  /* 통계 초소형 */
+  .header-stats { gap: 1px; }
+  .stat-num { font-size: 12px; }
+  .stat-divider { font-size: 12px; }
 
-  /* 탭 텍스트 중요 아이콘만 표시 */
-  .main-tab { font-size: 12px; padding: 6px 10px; }
+  /* 로고 */
+  .logo-text h1 { font-size: 15px; }
+
+  /* 탭 더 작게 */
+  .main-tab { font-size: 12px; padding: 6px 9px; gap: 3px; }
+
+  /* 일자 헤더: 480px에서만 column */
+  .day-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .day-title-wrap { flex: unset; flex-wrap: wrap; gap: 6px; }
+  .day-actions { width: 100%; justify-content: space-between; }
+  .btn-check-all { flex: 1; justify-content: center; font-size: 12px; padding: 5px 10px; }
+  .day-theme { font-size: 11px; padding: 2px 8px; }
+  .day-progress { flex-wrap: wrap; gap: 6px; }
+  .day-progress-text { font-size: 11px; }
+  .nav-btn { width: 32px; height: 32px; }
 
   /* 카드 */
   .word-grid { gap: 10px; }
@@ -984,17 +1006,7 @@ ul, ol { list-style: none; }
   .card-example-en { font-size: 12px; }
   .card-example-kr { font-size: 11px; }
 
-  /* 검색바 대신 상단 헤더 새주기 */
-  .day-title-wrap { flex-wrap: wrap; gap: 6px; }
-  .day-theme { font-size: 11px; padding: 2px 8px; }
-  .day-progress { flex-wrap: wrap; gap: 6px; }
-  .day-progress-text { font-size: 11px; }
-
-  /* 버튼 */
-  .btn-check-all { font-size: 12px; padding: 5px 10px; }
-  .nav-btn { width: 32px; height: 32px; }
-
-  /* 진도 히트맵 더 조밀하게 */
+  /* 진도 히트맵 */
   .pg-heatmap { grid-template-columns: repeat(15, 1fr); }
 
   /* 리스트 탭 */
@@ -1003,10 +1015,7 @@ ul, ol { list-style: none; }
   .wl-word { font-size: 13px; }
 
   /* 모달 → bottom sheet (slide-up) */
-  .modal-overlay {
-    align-items: flex-end;
-    padding: 0;
-  }
+  .modal-overlay { align-items: flex-end; padding: 0; }
   .modal-box {
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     max-height: 92vh;
