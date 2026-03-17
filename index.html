@@ -16,6 +16,12 @@
   <!-- ===== 헤더 ===== -->
   <header class="site-header">
     <div class="header-inner">
+
+      <!-- 햄버거 (모바일에서 맨 왼쪽) -->
+      <button class="menu-toggle" id="menuToggle" aria-label="메뉴 열기">
+        <span></span><span></span><span></span>
+      </button>
+
       <div class="logo-area">
         <span class="logo-icon">📚</span>
         <div class="logo-text">
@@ -47,16 +53,13 @@
         </div>
       </div>
 
-      <!-- 모바일 검색 버튼 (480px 이하에서 표시) -->
+      <!-- 모바일 검색 아이콘 (480px 이하에서만 표시) -->
       <button class="mobile-search-btn" id="mobileSearchBtn" aria-label="검색">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
         </svg>
       </button>
 
-      <button class="menu-toggle" id="menuToggle" aria-label="메뉴 열기">
-        <span></span><span></span><span></span>
-      </button>
     </div>
 
     <!-- 진행률 바 -->

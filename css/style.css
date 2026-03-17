@@ -145,7 +145,6 @@ ul, ol { list-style: none; }
   flex-direction: column;
   gap: 5px;
   padding: 6px;
-  margin-left: auto;
 }
 .menu-toggle span {
   display: block;
@@ -888,9 +887,9 @@ ul, ol { list-style: none; }
 @media (max-width: 768px) {
   :root { --header-h: 54px; }
 
-  /* 헤더: 햄버거 왼쪽, 로고, 검색, 통계 간략 */
+  /* 헤더 */
   .header-inner { padding: 0 10px; gap: 8px; }
-  .menu-toggle { display: flex; order: -1; margin-left: 0; }
+  .menu-toggle { display: flex; }
   .logo-icon { font-size: 22px; }
   .logo-text h1 { font-size: 17px; }
   .logo-sub { display: none; }
@@ -1284,3 +1283,56 @@ ul, ol { list-style: none; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+
+/* ============================================================
+   모바일 최적화 보정 override
+   ⚠ 이 블록은 반드시 파일 끝에 위치해야 합니다.
+     (.main-tabs / .pg-* / .wl-* 기본 스타일이 미디어쿼리 뒤에
+      선언되어 있어 cascade가 역전됩니다. 이를 재보정합니다.)
+   ============================================================ */
+
+/* ── 768px 이하 ── */
+@media (max-width: 768px) {
+  /* 네이티브 페이지 스크롤 정상화 */
+  html, body     { overflow-x: hidden; }
+  .app-container { min-height: unset; }
+  .main-content  { overflow-y: visible; height: auto; }
+
+  /* 탭 네비: base 14px/8px 18px → 모바일 13px/7px 12px */
+  .main-tabs {
+    gap: 3px;
+    padding: 0 0 12px;
+    margin-bottom: 14px;
+  }
+  .main-tab { font-size: 13px; padding: 7px 12px; }
+
+  /* iOS 관성 스크롤 */
+  .day-list      { -webkit-overflow-scrolling: touch; }
+  .modal-box     { -webkit-overflow-scrolling: touch; }
+  .wl-table-wrap { -webkit-overflow-scrolling: touch; }
+
+  /* 진도 탭: base 30열 → 모바일 20열 */
+  .pg-stats-row   { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .pg-stat-num    { font-size: 22px; }
+  .pg-heatmap     { grid-template-columns: repeat(20, 1fr); }
+  .pg-day-theme   { display: none; }
+  .pg-day-bar-row { padding: 5px 6px; }
+
+  /* 리스트 탭 */
+  .wl-table th, .wl-table td { padding: 8px 10px; }
+}
+
+/* ── 480px 이하 ── */
+@media (max-width: 480px) {
+  /* 탭 */
+  .main-tab { font-size: 12px; padding: 6px 9px; }
+
+  /* 진도 히트맵: 20열 → 15열 */
+  .pg-heatmap { grid-template-columns: repeat(15, 1fr); }
+
+  /* 리스트 탭 */
+  .wl-pron    { display: none; }
+  .wl-table th, .wl-table td { padding: 7px 8px; font-size: 12px; }
+  .wl-word    { font-size: 13px; }
+}
