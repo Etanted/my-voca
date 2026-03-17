@@ -1292,15 +1292,33 @@ ul, ol { list-style: none; }
 
 /* ── 768px 이하 ── */
 @media (max-width: 768px) {
-  /* 모바일에서 flex 대신 block 레이아웃 → 네이티브 페이지 스크롤 */
-  .app-container { display: block; }
+  /**
+   * app-container: flex-row → flex-column
+   * min-height 제거로 자연스러운 페이지 스크롤 확보
+   */
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
 
-  /* 내부 스크롤 제거: 브라우저의 자연스러운 페이지 스크롤 사용 */
-  .main-content { overflow: visible; }
+  /**
+   * main-content: 내부 스크롤 제거 → 페이지 스크롤 사용
+   * flex: 0 0 auto 로 높이 강제 확장 방지
+   */
+  .main-content {
+    flex: 0 0 auto;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: visible;
+  }
 
   /* 탭 */
   .main-tabs { gap: 3px; padding: 0 0 12px; margin-bottom: 14px; }
   .main-tab  { font-size: 13px; padding: 7px 12px; }
+
+  /* 단어 카드: 모바일에서 애니메이션 제거 → 즉시 표시 보장 */
+  .word-card { animation: none !important; opacity: 1 !important; }
 
   /* 진도 탭 */
   .pg-stats-row   { grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -1324,9 +1342,4 @@ ul, ol { list-style: none; }
   .wl-pron        { display: none; }
   .wl-table th, .wl-table td { padding: 7px 8px; font-size: 12px; }
   .wl-word        { font-size: 13px; }
-}
-
-/* ── 모션 감소 설정 접근성 (카드 항상 표시 보장) ── */
-@media (prefers-reduced-motion: reduce) {
-  .word-card { animation: none; opacity: 1; }
 }
