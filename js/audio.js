@@ -37,7 +37,7 @@ const Audio = (() => {
 
     const utterance = new SpeechSynthesisUtterance(word);
     utterance.lang = lang;
-    utterance.rate = 0.85;
+    utterance.rate = 1.0;
     utterance.pitch = 1.0;
     utterance.volume = 1.0;
 
@@ -81,7 +81,7 @@ const Audio = (() => {
 
     const wordUtt = new SpeechSynthesisUtterance(word);
     wordUtt.lang = 'en-US';
-    wordUtt.rate = 0.75;
+    wordUtt.rate = 1.0;
 
     const pauseUtt = new SpeechSynthesisUtterance('.');
     pauseUtt.lang = 'en-US';
@@ -89,7 +89,7 @@ const Audio = (() => {
 
     const exUtt = new SpeechSynthesisUtterance(example);
     exUtt.lang = 'en-US';
-    exUtt.rate = 0.85;
+    exUtt.rate = 1.0;
 
     const voices = window.speechSynthesis.getVoices();
     const enVoice = voices.find(v => v.lang.startsWith('en') && v.localService) ||

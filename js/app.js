@@ -148,6 +148,16 @@ const App = (() => {
       }
     });
 
+    /* 브라우저 뒤로 가기 → 모달 닫기 */
+    window.addEventListener('popstate', () => {
+      const overlay = document.getElementById('wordModal');
+      if (overlay && overlay.style.display !== 'none') {
+        overlay.style.display = 'none';
+        document.body.style.overflow = '';
+        Audio.stop();
+      }
+    });
+
     /* 햄버거 메뉴 */
     document.getElementById('menuToggle')?.addEventListener('click', () => {
       const sidebar = document.getElementById('sidebar');
@@ -296,20 +306,20 @@ const App = (() => {
      전체 단어 리스트 이벤트
   ───────────────────────────────────────── */
   function bindWordListEvents() {
-    const container = document.getElementById('wordListContainer');
-    if (!container) return;
-    const newC = container.cloneNode(true);
-    container.parentNode.replaceChild(newC, container);
+    // tabWordlist 부모에 한 번만 바인딩 (cloneNode 없이 이벤트 위임)
+    const pane = document.getElementById('tabWordlist');
+    if (!pane || pane.dataset.wlBound) return;
+    pane.dataset.wlBound = 'true';
 
-    newC.addEventListener('click', e => {
-      // 일자 필터 버튼
-      const dayBtn = e.target.closest('.wl-day-btn');
-      if (dayBtn) {
-        wlFilterDay = parseInt(dayBtn.dataset.day, 10);
+    // Day 선택 드롭다운 change
+    pane.addEventListener('change', e => {
+      if (e.target.id === 'wlDaySelect') {
+        wlFilterDay = parseInt(e.target.value, 10);
         UI.renderWordList(wlFilterDay);
-        bindWordListEvents();
-        return;
       }
+    });
+
+    pane.addEventListener('click', e => {
       // 체크 버튼
       const checkBtn = e.target.closest('.wl-check-btn');
       if (checkBtn) {
@@ -317,13 +327,16 @@ const App = (() => {
         const day = parseInt(checkBtn.dataset.day, 10);
         const idx = parseInt(checkBtn.dataset.idx, 10);
         handleCheck(day, idx);
-        // 버튼 스타일 즉시 갱신
         const checked = Storage.isChecked(day, idx);
         checkBtn.style.background  = checked ? 'var(--success)' : 'transparent';
         checkBtn.style.borderColor = checked ? 'var(--success)' : 'var(--border)';
         checkBtn.style.color       = checked ? '#fff'           : 'transparent';
         const row = checkBtn.closest('.wl-word-row');
-        if (row) row.classList.toggle('wl-checked', checked);
+        if (row) {
+          row.classList.toggle('wl-checked', checked);
+          const badge = row.querySelector('.wl-done-badge');
+          if (badge) badge.classList.toggle('visible', checked);
+        }
         return;
       }
       // 단어 행 클릭 → 모달

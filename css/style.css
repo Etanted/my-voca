@@ -394,6 +394,26 @@ ul, ol { list-style: none; }
   gap: 16px;
 }
 
+/* 카드 일러스트 (Day 1 단어 연상 이미지) */
+.card-illust {
+  position: absolute;
+  top: 12px;
+  right: 50px;
+  width: 76px;
+  height: 76px;
+  opacity: 0.92;
+  pointer-events: none;
+  transition: opacity var(--transition), transform var(--transition);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.card-illust svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.word-card:hover .card-illust { opacity: 1; transform: scale(1.04); }
+
 /* 단어 카드 */
 .word-card {
   background: var(--bg-card);
@@ -461,13 +481,20 @@ ul, ol { list-style: none; }
 .check-btn svg { width: 14px; height: 14px; }
 
 /* 단어 정보 */
-.card-word-area { margin: 24px 0 10px; }
+.card-word-area {
+  margin: 20px 0 10px;
+}
 .card-word {
+  display: inline-block;
+  background: #e8f3ff;
+  border-radius: 8px;
+  padding: 4px 14px 6px;
   font-size: 22px;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-weight: 800;
+  color: #1a6fd4;
   font-family: 'Roboto', sans-serif;
   line-height: 1.2;
+  letter-spacing: -0.3px;
 }
 .card-pronunciation {
   font-size: 13px;
@@ -1009,7 +1036,6 @@ ul, ol { list-style: none; }
   .pg-heatmap { grid-template-columns: repeat(15, 1fr); }
 
   /* 리스트 탭 */
-  .wl-pron { display: none; }
   .wl-table th, .wl-table td { padding: 7px 8px; font-size: 12px; }
   .wl-word { font-size: 13px; }
 
@@ -1123,6 +1149,26 @@ ul, ol { list-style: none; }
   flex-wrap: wrap;
   gap: 4px;
 }
+.wl-day-select {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 32px 6px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 10px center;
+  -webkit-appearance: none;
+  appearance: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  min-width: 240px;
+  max-width: 100%;
+  transition: border-color var(--transition);
+}
+.wl-day-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
 .wl-day-btn {
   font-size: 12px;
   font-weight: 500;
@@ -1159,9 +1205,27 @@ ul, ol { list-style: none; }
   white-space: nowrap;
 }
 .wl-table td { padding: 9px 14px; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
+.wl-table td.wl-compound { padding: 0; }
 .wl-word-row:hover { background: var(--bg); cursor: pointer; }
 .wl-word-row.wl-checked { background: linear-gradient(90deg, #f0fdf4 0%, #fff 100%); }
 .wl-word-row.wl-checked .wl-word { color: var(--success); }
+
+/* 학습 완료 뼱지 */
+.wl-done-badge {
+  display: none;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--success);
+  background: #f0fdf4;
+  border: 1px solid var(--success);
+  border-radius: 10px;
+  padding: 1px 7px;
+  margin-left: 6px;
+  vertical-align: middle;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.wl-done-badge.visible { display: inline-block; }
 
 .wl-day-row td {
   background: linear-gradient(90deg, var(--primary-light), transparent);
@@ -1172,9 +1236,29 @@ ul, ol { list-style: none; }
   border-bottom: 1px solid var(--border);
 }
 .wl-word { font-weight: 700; font-family: 'Roboto', sans-serif; color: var(--text-primary); font-size: 14px; }
-.wl-pron { color: var(--text-tertiary); font-family: 'Roboto', sans-serif; white-space: nowrap; }
-.wl-meaning { color: var(--text-secondary); max-width: 220px; }
+.wl-pron { color: var(--text-tertiary); font-family: 'Roboto', sans-serif; font-size: 12px; margin-left: 6px; white-space: nowrap; }
+.wl-meaning { color: var(--text-secondary); flex: 1; min-width: 0; }
 .wl-check { text-align: center; }
+
+/* 2줄 복합 셀 */
+.wl-compound { padding: 8px 14px; }
+.wl-line1 {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+.wl-line2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.wl-line2 .wl-meaning {
+  font-size: 13px;
+  color: var(--text-secondary);
+  flex: 1;
+  min-width: 0;
+}
 
 /* =========================================================
    학습 진도 탭
@@ -1339,7 +1423,6 @@ ul, ol { list-style: none; }
 @media (max-width: 480px) {
   .main-tab       { font-size: 12px; padding: 6px 9px; }
   .pg-heatmap     { grid-template-columns: repeat(15, 1fr); }
-  .wl-pron        { display: none; }
   .wl-table th, .wl-table td { padding: 7px 8px; font-size: 12px; }
   .wl-word        { font-size: 13px; }
 }
